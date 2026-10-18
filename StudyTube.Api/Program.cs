@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using StudyTube.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<StudyTubeDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 // Add services to the container.
 
