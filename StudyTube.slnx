@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="StudyTube.Api/StudyTube.Api.csproj" />
+  <Project Path="StudyTube.Data/StudyTube.Data.csproj" />
+  <Project Path="StudyTube.Domain/StudyTube.Domain.csproj" />
+  <Project Path="StudyTube.Services/StudyTube.Services.csproj" />
+  <Project Path="StudyTube.Tests/StudyTube.Tests.csproj" />
+</Solution>
