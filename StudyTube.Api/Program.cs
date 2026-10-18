@@ -42,6 +42,12 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseStaticFiles();
+    app.UseSwaggerUI(o =>
+    {
+        o.SwaggerEndpoint("/openapi/v1.json", "StudyTube API");
+        o.InjectStylesheet("/swagger-ui/custom.css");
+    });
 }
 
 app.UseCors("Frontends");
