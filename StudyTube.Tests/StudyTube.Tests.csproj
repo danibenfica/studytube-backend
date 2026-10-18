@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\StudyTube.Domain\StudyTube.Domain.csproj" />
     <ProjectReference Include="..\StudyTube.Services\StudyTube.Services.csproj" />
+    <ProjectReference Include="..\StudyTube.Data\StudyTube.Data.csproj" />
   </ItemGroup>
 
 </Project>
