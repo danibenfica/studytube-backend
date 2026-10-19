@@ -1,4 +1,4 @@
-@host = http://localhost:5265
+@host = http://localhost:5126
 
 ###
 GET {{host}}/api/videos
