@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Build e testes (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v7
+
+      - name: Instalar o .NET (versão do global.json)
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Restaurar pacotes
+        run: dotnet restore StudyTube.slnx
+
+      - name: Compilar
+        run: dotnet build StudyTube.slnx --no-restore --configuration Release
+
+      - name: Testes (NUnit)
+        run: dotnet test StudyTube.slnx --no-build --configuration Release
