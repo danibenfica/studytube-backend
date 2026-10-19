@@ -266,7 +266,7 @@ O SDK está fixado em `global.json` (10.0.402, `rollForward: latestFeature`). Os
 
 | Componente | Versão |
 |---|---|
-| .NET SDK utilizado | `10.0.402` |
+| .NET SDK utilizado | `10.0.400` |
 | `Microsoft.AspNetCore.OpenApi` | `10.0.11` |
 | `Microsoft.EntityFrameworkCore.Design` | `10.0.13` |
 | `Swashbuckle.AspNetCore.SwaggerUI` | `10.3.0` |
