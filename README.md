@@ -262,7 +262,7 @@ Essa diferença de serialização é importante ao integrar a API com outros cli
 
 ## 🧰 Versões e dependências
 
-O projeto utiliza .NET 10 e não possui um arquivo `global.json`.
+O SDK está fixado em `global.json` (10.0.402, `rollForward: latestFeature`). Os projetos usam `net10.0`.
 
 | Componente | Versão |
 |---|---|
