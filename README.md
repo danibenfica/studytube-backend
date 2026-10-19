@@ -262,7 +262,7 @@ Essa diferença de serialização é importante ao integrar a API com outros cli
 
 ## 🧰 Versões e dependências
 
-O SDK está fixado em `global.json` (10.0.402, `rollForward: latestFeature`). Os projetos usam `net10.0`.
+O SDK está fixado em `global.json` (10.0.400, `rollForward: latestFeature`). Os projetos usam `net10.0`.
 
 | Componente | Versão |
 |---|---|
