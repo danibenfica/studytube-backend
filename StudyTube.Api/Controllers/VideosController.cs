@@ -1,14 +1,14 @@
+using StudyTube.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using StudyTube.Domain.Exceptions;
 using StudyTube.Services.Videos;
+using StudyTube.Api.Requests;
 
 namespace StudyTube.Api.Controllers;
 
-public record AddVideoRequest(string Url);
-
 [ApiController]
 [Route("api/[controller]")]
-public class VideosController(VideoService videoService) : ControllerBase
+public class VideosController(IVideoService videoService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<VideoDto>>> GetAll(CancellationToken cancellationToken)

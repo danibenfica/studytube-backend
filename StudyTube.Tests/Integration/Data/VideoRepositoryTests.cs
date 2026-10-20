@@ -1,6 +1,5 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
 using StudyTube.Data;
 using StudyTube.Data.Repositories;
 using StudyTube.Domain.Entities;
@@ -37,13 +36,13 @@ public class VideoRepositoryTests
         _connection.Dispose();
     }
 
-    private static Video CriarVideo() =>
+    private static Video CreateVideo() =>
         Video.Create(YouTubeVideoId.Create("dQw4w9WgXcQ"), "Aula de DDD", "Canal", "", TimeSpan.FromMinutes(10));
 
     [Test]
-    public async Task AddAsync_SalvaVideoNoBanco()
+    public async Task AddAsync_SavesVideoToDatabase()
     {
-        await _repository.AddAsync(CriarVideo());
+        await _repository.AddAsync(CreateVideo());
         await _repository.SaveChangesAsync();
 
         var videos = await _repository.GetAllAsync();
@@ -53,18 +52,18 @@ public class VideoRepositoryTests
     }
 
     [Test]
-    public async Task ExistsAsync_VideoSalvo_RetornaTrue()
+    public async Task ExistsAsync_SavedVideo_ReturnsTrue()
     {
-        await _repository.AddAsync(CriarVideo());
+        await _repository.AddAsync(CreateVideo());
         await _repository.SaveChangesAsync();
 
-        var existe = await _repository.ExistsAsync(YouTubeVideoId.Create("dQw4w9WgXcQ"));
+        var exists = await _repository.ExistsAsync(YouTubeVideoId.Create("dQw4w9WgXcQ"));
 
-        Assert.That(existe, Is.True);
+        Assert.That(exists, Is.True);
     }
 
     [Test]
-    public async Task GetByIdAsync_IdInexistente_RetornaNull()
+    public async Task GetByIdAsync_UnknownId_ReturnsNull()
     {
         var video = await _repository.GetByIdAsync(Guid.NewGuid());
 
@@ -72,9 +71,9 @@ public class VideoRepositoryTests
     }
 
     [Test]
-    public async Task MarkAsWatched_DepoisDeSalvar_ContinuaAssistidoNoBanco()
+    public async Task MarkAsWatched_AfterSaving_StaysWatchedInDatabase()
     {
-        var video = CriarVideo();
+        var video = CreateVideo();
         await _repository.AddAsync(video);
         await _repository.SaveChangesAsync();
 
@@ -82,9 +81,9 @@ public class VideoRepositoryTests
         await _repository.SaveChangesAsync();
         _context.ChangeTracker.Clear();
 
-        var doBanco = await _repository.GetByIdAsync(video.Id);
+        var fromDatabase = await _repository.GetByIdAsync(video.Id);
 
-        Assert.That(doBanco, Is.Not.Null);
-        Assert.That(doBanco!.Watched, Is.True);
+        Assert.That(fromDatabase, Is.Not.Null);
+        Assert.That(fromDatabase!.Watched, Is.True);
     }
 }

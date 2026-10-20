@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using StudyTube.Domain.Entities;
 using StudyTube.Domain.Exceptions;
 using StudyTube.Domain.ValueObjects;
@@ -24,7 +23,7 @@ public class VideoServiceTests
     }
 
     [Test]
-    public async Task AddFromUrlAsync_LinkValido_SalvaVideo()
+    public async Task AddFromUrlAsync_ValidLink_SavesVideo()
     {
         var dto = await _service.AddFromUrlAsync("https://youtu.be/dQw4w9WgXcQ");
 
@@ -33,7 +32,7 @@ public class VideoServiceTests
     }
 
     [Test]
-    public async Task AddFromUrlAsync_VideoRepetido_LancaDomainException()
+    public async Task AddFromUrlAsync_DuplicateVideo_ThrowsDomainException()
     {
         await _service.AddFromUrlAsync("https://youtu.be/dQw4w9WgXcQ");
 
@@ -42,30 +41,30 @@ public class VideoServiceTests
     }
 
     [Test]
-    public void AddFromUrlAsync_VideoNaoExisteNoYouTube_LancaDomainException()
+    public void AddFromUrlAsync_VideoNotFoundOnYouTube_ThrowsDomainException()
     {
-        _youTube.Encontrar = false;
+        _youTube.ShouldFindVideo = false;
 
         Assert.ThrowsAsync<DomainException>(() =>
             _service.AddFromUrlAsync("https://youtu.be/dQw4w9WgXcQ"));
     }
 
     [Test]
-    public async Task MarkAsWatchedAsync_IdInexistente_RetornaNull()
+    public async Task MarkAsWatchedAsync_UnknownId_ReturnsNull()
     {
-        var resultado = await _service.MarkAsWatchedAsync(Guid.NewGuid());
+        var result = await _service.MarkAsWatchedAsync(Guid.NewGuid());
 
-        Assert.That(resultado, Is.Null);
+        Assert.That(result, Is.Null);
     }
 
     [Test]
-    public async Task MarkAsWatchedAsync_VideoExistente_MarcaComoAssistido()
+    public async Task MarkAsWatchedAsync_ExistingVideo_MarksAsWatched()
     {
         var dto = await _service.AddFromUrlAsync("https://youtu.be/dQw4w9WgXcQ");
 
-        var resultado = await _service.MarkAsWatchedAsync(dto.Id);
+        var result = await _service.MarkAsWatchedAsync(dto.Id);
 
-        Assert.That(resultado!.Watched, Is.True);
+        Assert.That(result!.Watched, Is.True);
     }
 
     private class FakeVideoRepository : IVideoRepository
@@ -92,10 +91,10 @@ public class VideoServiceTests
 
     private class FakeYouTubeApiClient : IYouTubeApiClient
     {
-        public bool Encontrar { get; set; } = true;
+        public bool ShouldFindVideo { get; set; } = true;
 
         public Task<YouTubeVideoInfo?> GetVideoAsync(YouTubeVideoId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Encontrar
+            Task.FromResult(ShouldFindVideo
                 ? new YouTubeVideoInfo("Aula de DDD", "Canal", "", TimeSpan.FromMinutes(10))
                 : null);
     }

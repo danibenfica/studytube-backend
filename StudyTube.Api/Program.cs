@@ -23,8 +23,7 @@ builder.Services.AddHttpClient<IYouTubeApiClient, YouTubeApiClient>(client =>
 });
 
 builder.Services.AddScoped<IVideoRepository, VideoRepository>();
-builder.Services.AddScoped<VideoService>();
-
+builder.Services.AddScoped<IVideoService, VideoService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontends", policy =>

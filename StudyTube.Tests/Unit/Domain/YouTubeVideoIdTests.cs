@@ -1,8 +1,7 @@
-using NUnit.Framework;
 using StudyTube.Domain.Exceptions;
 using StudyTube.Domain.ValueObjects;
 
-namespace StudyTube.Tests.Domain;
+namespace StudyTube.Tests.Unit.Domain;
 
 [TestFixture]
 public class YouTubeVideoIdTests
@@ -11,7 +10,7 @@ public class YouTubeVideoIdTests
     [TestCase("https://youtu.be/dQw4w9WgXcQ")]
     [TestCase("https://www.youtube.com/embed/dQw4w9WgXcQ")]
     [TestCase("https://www.youtube.com/shorts/dQw4w9WgXcQ")]
-    public void FromUrl_LinksValidos_ExtraiId(string url)
+    public void FromUrl_ValidLinks_ExtractsId(string url)
     {
         var id = YouTubeVideoId.FromUrl(url);
 
@@ -20,23 +19,23 @@ public class YouTubeVideoIdTests
 
     [TestCase("nao é link")]
     [TestCase("https://google.com")]
-    public void FromUrl_LinkInvalido_LancaDomainException(string url)
+    public void FromUrl_InvalidLink_ThrowsDomainException(string url)
     {
         Assert.Throws<DomainException>(() => YouTubeVideoId.FromUrl(url));
     }
 
     [Test]
-    public void Create_IdComTamanhoErrado_LancaDomainException()
+    public void Create_WrongLength_ThrowsDomainException()
     {
         Assert.Throws<DomainException>(() => YouTubeVideoId.Create("abc"));
     }
 
     [Test]
-    public void DoisIdsIguais_SaoIguais()
+    public void Equals_SameId_ReturnsTrue()
     {
-        var primeiro = YouTubeVideoId.Create("dQw4w9WgXcQ");
-        var segundo = YouTubeVideoId.Create("dQw4w9WgXcQ");
+        var first = YouTubeVideoId.Create("dQw4w9WgXcQ");
+        var second = YouTubeVideoId.Create("dQw4w9WgXcQ");
 
-        Assert.That(primeiro, Is.EqualTo(segundo));
+        Assert.That(first, Is.EqualTo(second));
     }
 }
