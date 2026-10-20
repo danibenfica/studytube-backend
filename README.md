@@ -499,6 +499,8 @@ StudyTube.slnx
 ├── StudyTube.Api/
 │   ├── Controllers/
 │   │   └── VideosController.cs
+│   ├── Requests/
+│   │   └── AddVideoRequest.cs
 │   ├── Program.cs
 │   ├── Properties/
 │   │   └── launchSettings.json
@@ -522,6 +524,7 @@ StudyTube.slnx
 │   │   └── VideoDto.cs
 │   ├── Interfaces/
 │   │   ├── IVideoRepository.cs
+│   │   ├── IVideoService.cs
 │   │   └── IYouTubeApiClient.cs
 │   └── YouTube/
 │       └── YouTubeVideoInfo.cs
@@ -570,6 +573,8 @@ O StudyTube foi organizado em quatro projetos principais, com responsabilidades 
 | `StudyTube.Services` | Casos de uso, DTOs e interfaces das dependências necessárias. |
 | `StudyTube.Data` | Persistência, Entity Framework Core, SQLite e comunicação HTTP com o YouTube. |
 | `StudyTube.Api` | Endpoints, injeção de dependências, configuração HTTP e inicialização da aplicação. |
+
+O `VideosController` depende da interface `IVideoService`, registrada em `Program.cs` com `AddScoped<IVideoService, VideoService>()`. Os objetos de entrada da API, como `AddVideoRequest`, ficam em `StudyTube.Api/Requests`.
 
 A direção das dependências é:
 

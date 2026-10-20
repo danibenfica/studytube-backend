@@ -5,8 +5,7 @@ using StudyTube.Services.Interfaces;
 
 namespace StudyTube.Services.Videos;
 
-public class VideoService(IVideoRepository repository, IYouTubeApiClient youTube)
-{
+public class VideoService(IVideoRepository repository, IYouTubeApiClient youTube) : IVideoService{
     public async Task<List<VideoDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var videos = await repository.GetAllAsync(cancellationToken);
