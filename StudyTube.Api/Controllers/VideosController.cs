@@ -8,7 +8,8 @@ namespace StudyTube.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class VideosController(IVideoService videoService) : ControllerBase{
+public class VideosController(IVideoService videoService) : ControllerBase
+{
     [HttpGet]
     public async Task<ActionResult<List<VideoDto>>> GetAll(CancellationToken cancellationToken)
     {

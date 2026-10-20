@@ -62,9 +62,9 @@ public class VideoServiceTests
     {
         var dto = await _service.AddFromUrlAsync("https://youtu.be/dQw4w9WgXcQ");
 
-        var resultado = await _service.MarkAsWatchedAsync(dto.Id);
+        var result = await _service.MarkAsWatchedAsync(dto.Id);
 
-        Assert.That(resultado!.Watched, Is.True);
+        Assert.That(result!.Watched, Is.True);
     }
 
     private class FakeVideoRepository : IVideoRepository
