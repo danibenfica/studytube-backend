@@ -1,0 +1,28 @@
+# Saídas de build
+**/bin/
+**/obj/
+**/publish/
+
+# Git, IDEs e CI
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+*.user
+*.DotSettings.user
+
+# Banco local e segredos (nunca vão para a imagem)
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.*
+**/secrets.json
+
+# Testes e documentação não são necessários para rodar a API
+StudyTube.Tests/
+docs/
+*.md
+Dockerfile
+.dockerignore

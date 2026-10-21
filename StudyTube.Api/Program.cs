@@ -1,3 +1,4 @@
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StudyTube.Data;
 using StudyTube.Data.ExternalServices.YouTube;
@@ -7,11 +8,27 @@ using StudyTube.Services.Videos;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Hospedagem: plataformas como o Render informam a porta pela variável PORT.
+// Localmente ela não existe, então continua valendo o launchSettings.json.
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddHealthChecks();
+
+// O caminho do banco vem de ConnectionStrings:Default
+// (na hospedagem: variável de ambiente ConnectionStrings__Default).
+var connectionString = builder.Configuration.GetConnectionString("Default")
+                       ?? "Data Source=studytube.db";
+var dataSource = new SqliteConnectionStringBuilder(connectionString).DataSource;
+var dataDirectory = Path.GetDirectoryName(Path.GetFullPath(dataSource));
+if (!string.IsNullOrEmpty(dataDirectory))
+    Directory.CreateDirectory(dataDirectory);
 
 builder.Services.AddDbContext<StudyTubeDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+    options.UseSqlite(connectionString));
 
 builder.Services.AddSingleton(new YouTubeOptions
 {
@@ -38,7 +55,9 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-if (app.Environment.IsDevelopment())
+// Swagger: sempre em Development; na hospedagem só se Swagger:Enabled = true
+// (variável de ambiente Swagger__Enabled=true).
+if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("Swagger:Enabled"))
 {
     app.MapOpenApi();
     app.UseStaticFiles();
@@ -51,6 +70,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Frontends");
 app.UseAuthorization();
+
+app.MapGet("/", () => Results.Ok(new { name = "StudyTube API", status = "online" }));
+app.MapHealthChecks("/health");
 app.MapControllers();
 
 app.Run();
