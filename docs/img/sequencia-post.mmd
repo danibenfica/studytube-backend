@@ -1,0 +1,44 @@
+sequenceDiagram
+    autonumber
+    actor C as Cliente (StudyTube Web)
+    participant CT as VideosController
+    participant S as VideoService
+    participant D as YouTubeVideoId / Video
+    participant R as VideoRepository (SQLite)
+    participant Y as YouTubeApiClient
+    participant G as YouTube Data API v3
+    Note over C,G: Cada bloco "alt" de erro encerra a requisição com a resposta indicada.
+    C->>CT: POST /api/videos { "url": "..." }
+    alt url ausente ou vazia
+        CT-->>C: 400 ProblemDetails ("The Url field is required.")
+    end
+    CT->>S: AddFromUrlAsync(url)
+    S->>D: YouTubeVideoId.FromUrl(url)
+    alt URL/ID inválido (RN01, RN02)
+        D-->>S: DomainException
+        S-->>CT: DomainException
+        CT-->>C: 400 { "error": mensagem de URL/ID (UC_001 FE_02 a FE_04) }
+    end
+    S->>R: ExistsAsync(youTubeId)
+    alt vídeo já cadastrado (RN05)
+        S-->>CT: DomainException
+        CT-->>C: 400 { "error": "Este vídeo já está na sua lista." }
+    end
+    S->>Y: GetVideoAsync(youTubeId)
+    Y->>G: GET videos?part=snippet,contentDetails&id={id}&key=***
+    alt falha HTTP (chave ausente/recusada, cota, rede)
+        G-->>Y: erro HTTP
+        Y-->>CT: HttpRequestException (não tratada)
+        CT-->>C: 500 Internal Server Error
+    else nenhum item retornado (RN09)
+        G-->>Y: 200 { items: [] }
+        Y-->>S: null
+        CT-->>C: 400 { "error": "Vídeo não encontrado no YouTube." }
+    else vídeo encontrado
+        G-->>Y: 200 snippet + contentDetails
+        Y-->>S: YouTubeVideoInfo (miniatura high/default, duração ISO 8601 → TimeSpan)
+    end
+    S->>D: Video.Create(...) (RN03, RN04, RN08)
+    S->>R: AddAsync + SaveChangesAsync
+    S-->>CT: VideoDto
+    CT-->>C: 201 Created + Location /api/videos/{id} + VideoDto

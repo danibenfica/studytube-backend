@@ -1,0 +1,24 @@
+flowchart LR
+    U["🧍<br/><b>Usuário</b><br/>(estudante, via frontend)"]
+    YT["🧍<br/><b>YouTube Data API v3</b><br/>(ator secundário)"]
+    subgraph SYS["Sistema StudyTube API (backend)"]
+        direction TB
+        UC1(["UC_001<br/>Adicionar videoaula"])
+        UC2(["UC_002<br/>Consultar lista de videoaulas"])
+        UC3(["UC_003<br/>Marcar videoaula como assistida"])
+        UC4(["UC_004<br/>Desmarcar videoaula como assistida"])
+        UC7(["UC_007<br/>Validar link do YouTube"])
+        UC8(["UC_008<br/>Obter metadados do vídeo"])
+    end
+    U --- UC1
+    U --- UC2
+    U --- UC3
+    U --- UC4
+    UC1 -. "&lt;&lt;include&gt;&gt;" .-> UC7
+    UC1 -. "&lt;&lt;include&gt;&gt;" .-> UC8
+    UC8 --- YT
+    classDef uc fill:#ffffff,stroke:#15324C,stroke-width:1.5px,color:#15324C;
+    classDef actor fill:#ffffff,stroke:#ffffff,color:#15324C;
+    class UC1,UC2,UC3,UC4,UC7,UC8 uc;
+    class U,YT actor;
+    style SYS fill:#F4F8FA,stroke:#15324C,stroke-width:1px,color:#15324C

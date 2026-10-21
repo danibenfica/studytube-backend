@@ -1,0 +1,15 @@
+flowchart TB
+    P["<b>Estudante</b><br/>[Pessoa]<br/>Organiza videoaulas e marca o que já estudou."]
+    FE["<b>StudyTube Web</b><br/>[Sistema de software]<br/>Interface React (repositório studytube-frontend)."]
+    API["<b>StudyTube API</b><br/>[Sistema de software — escopo deste documento]<br/>Cadastra, lista e atualiza videoaulas."]
+    YT["<b>YouTube Data API v3</b><br/>[Sistema externo — Google]<br/>Fornece título, canal, miniatura e duração."]
+    MOB["<b>StudyTube Mobile</b><br/>[Sistema planejado — React Native]"]
+    P -->|"Usa no navegador"| FE
+    FE -->|"HTTP/JSON<br/>/api/videos"| API
+    MOB -. "HTTP/JSON (planejado)" .-> API
+    API -->|"HTTPS GET videos?part=snippet,contentDetails<br/>(chave de API)"| YT
+    classDef person fill:#15324C,stroke:#0d2133,color:#ffffff;
+    classDef sys fill:#1F6F8B,stroke:#15324C,color:#ffffff;
+    classDef ext fill:#8A9BA8,stroke:#5c6b75,color:#ffffff;
+    classDef planned fill:#ffffff,stroke:#8A9BA8,stroke-dasharray:5 5,color:#5c6b75;
+    class P person; class API sys; class FE,YT ext; class MOB planned;

@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph PC["Computador do desenvolvedor (Windows, macOS ou Linux)"]
+        direction TB
+        BR["Navegador"]
+        VITE["Vite dev server<br/>studytube-frontend<br/>http://localhost:5173 (padrão do Vite)"]
+        KES["Kestrel — StudyTube.Api<br/>perfil http: http://localhost:5126<br/>perfil https: https://localhost:7271"]
+        DBF[("StudyTube.Api/studytube.db<br/>SQLite (ignorado pelo Git)")]
+        SEC["User Secrets<br/>YouTube:ApiKey"]
+    end
+    subgraph GH["GitHub"]
+        CI["GitHub Actions — CI<br/>ubuntu-latest + windows-latest<br/>restore → build Release → test"]
+    end
+    G["YouTube Data API v3<br/>https://www.googleapis.com/youtube/v3/"]
+    BR --> VITE
+    BR -->|"fetch /api/videos"| KES
+    KES --> DBF
+    SEC -. "configuração" .-> KES
+    KES -->|"HTTPS"| G
+    classDef n fill:#ffffff,stroke:#15324C,color:#15324C;
+    class BR,VITE,KES,DBF,SEC,CI,G n;
+    style PC fill:#F4F8FA,stroke:#15324C
+    style GH fill:#F4F8FA,stroke:#15324C

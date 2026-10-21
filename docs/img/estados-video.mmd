@@ -1,0 +1,15 @@
+stateDiagram-v2
+    direction TB
+    [*] --> NaoAssistido: Video.Create() · Watched = false, WatchedAt = null (RN08)
+    NaoAssistido --> Assistido: MarkAsWatched() · PATCH /api/videos/{id}/watched · WatchedAt = UtcNow
+    Assistido --> NaoAssistido: MarkAsUnwatched() · DELETE /api/videos/{id}/watched · WatchedAt = null (RN07)
+    NaoAssistido: Não assistido
+    Assistido: Assistido
+    note left of NaoAssistido
+        MarkAsUnwatched() aqui é permitido
+        e não muda nada (200)
+    end note
+    note right of Assistido
+        MarkAsWatched() aqui é rejeitado:
+        400 "Este vídeo já foi marcado como assistido." (RN06)
+    end note

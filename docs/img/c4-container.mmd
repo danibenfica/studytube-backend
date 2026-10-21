@@ -1,0 +1,22 @@
+flowchart TB
+    FE["<b>StudyTube Web</b><br/>[React 19 + Vite]"]
+    subgraph B["StudyTube API — solution .NET 10 (StudyTube.slnx)"]
+        direction TB
+        APIP["<b>StudyTube.Api</b><br/>[ASP.NET Core Web API]<br/>VideosController, CORS 'Frontends',<br/>OpenAPI/Swagger (Development)"]
+        SVC["<b>StudyTube.Services</b><br/>[Aplicação]<br/>VideoService, VideoDto,<br/>IVideoRepository, IYouTubeApiClient"]
+        DOM["<b>StudyTube.Domain</b><br/>[Domínio]<br/>Video, YouTubeVideoId, DomainException"]
+        DATA["<b>StudyTube.Data</b><br/>[Infraestrutura — EF Core]<br/>VideoRepository, YouTubeApiClient,<br/>StudyTubeDbContext, Migrations"]
+        DB[("<b>studytube.db</b><br/>[SQLite]<br/>tabela Videos")]
+    end
+    YT["<b>YouTube Data API v3</b><br/>[Externo]"]
+    FE -->|"HTTP/JSON"| APIP
+    APIP --> SVC
+    SVC --> DOM
+    DATA -. "implementa interfaces" .-> SVC
+    DATA --> DOM
+    DATA -->|"EF Core"| DB
+    DATA -->|"HttpClient / HTTPS"| YT
+    classDef c fill:#1F6F8B,stroke:#15324C,color:#ffffff;
+    classDef ext fill:#8A9BA8,stroke:#5c6b75,color:#ffffff;
+    class APIP,SVC,DOM,DATA,DB c; class FE,YT ext;
+    style B fill:#F4F8FA,stroke:#15324C,color:#15324C

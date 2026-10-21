@@ -1,0 +1,16 @@
+flowchart TD
+    A(["Usuário informa a URL do vídeo"]) --> B["Sistema extrai e valida o ID (UC_007)"]
+    B --> C{"URL e ID válidos?"}
+    C -- "não" --> E1["400: mensagem de validação<br/>(FE_02, FE_03, FE_04)"]
+    C -- "sim" --> D{"Já existe na lista?"}
+    D -- "sim" --> E2["400: Este vídeo já está na sua lista. (FE_05)"]
+    D -- "não" --> F["Sistema consulta a YouTube Data API v3 (UC_008)"]
+    F --> G{"Resposta do YouTube"}
+    G -- "falha HTTP" --> E3["500: erro interno (FE_07)"]
+    G -- "sem itens" --> E4["400: Vídeo não encontrado no YouTube. (FE_06)"]
+    G -- "vídeo encontrado" --> H["Sistema cria a videoaula não assistida"]
+    H --> I["Sistema grava no SQLite"]
+    I --> J(["201 Created + VideoDto"])
+    classDef ok fill:#E6F5F2,stroke:#1F6F8B,color:#15324C;
+    classDef err fill:#FDECEA,stroke:#B03A2E,color:#5c1a14;
+    class A,J ok; class E1,E2,E3,E4 err;
