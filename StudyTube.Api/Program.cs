@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StudyTube.Data;
@@ -17,6 +18,16 @@ if (!string.IsNullOrWhiteSpace(port))
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
+
+// Hospedagem: o Render recebe o acesso em https e repassa para a API em http,
+// avisando o endereço original nos cabeçalhos X-Forwarded-*. Isso faz a API
+// (e o Swagger) enxergar o endereço certo, com https.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 // O caminho do banco vem de ConnectionStrings:Default
 // (na hospedagem: variável de ambiente ConnectionStrings__Default).
@@ -48,6 +59,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 using (var scope = app.Services.CreateScope())
 {
